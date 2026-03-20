@@ -36,6 +36,7 @@ const allowedOrigins = [
   'http://localhost:5174',
   'http://localhost:5175',
   'http://localhost:4173',
+  'https://vedaai-vqjp.onrender.com', // User's deployed frontend
 ];
 
 app.use(
@@ -43,10 +44,17 @@ app.use(
     origin: (origin, callback) => {
       // Allow requests with no origin (curl, Postman, mobile apps)
       if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin) || /^http:\/\/localhost:\d+$/.test(origin)) {
+      
+      const isAllowed = allowedOrigins.includes(origin) || 
+                       /^http:\/\/localhost:\d+$/.test(origin) ||
+                       (process.env.CLIENT_URL && origin === process.env.CLIENT_URL);
+
+      if (isAllowed) {
         return callback(null, true);
       }
-      callback(new Error(`CORS blocked: ${origin}`));
+      
+      // Standard CORS rejection (false) instead of throwing an Error (which causes 500)
+      callback(null, false);
     },
     credentials: true,
   })

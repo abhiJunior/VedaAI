@@ -6,10 +6,17 @@ export const initSocket = (httpServer) => {
   io = new Server(httpServer, {
     cors: {
       origin: (origin, callback) => {
-        if (!origin || /^http:\/\/localhost:\d+$/.test(origin)) {
+        const isAllowed = !origin || 
+                         /^http:\/\/localhost:\d+$/.test(origin) ||
+                         (process.env.CLIENT_URL && origin === process.env.CLIENT_URL) ||
+                         origin === 'https://vedaai-vqjp.onrender.com';
+
+        if (isAllowed) {
           return callback(null, true);
         }
-        callback(new Error(`Socket.io CORS blocked: ${origin}`));
+        
+        // Return false instead of Error to avoid server-side crashes/500s
+        callback(null, false);
       },
       methods: ['GET', 'POST'],
       credentials: true,
