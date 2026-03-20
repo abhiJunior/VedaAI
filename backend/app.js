@@ -6,12 +6,12 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 
-import connectDB from './config/db.js';
-import { initSocket } from './config/socket.js';
-import assignmentRoutes from './routes/assignments.js';
+import connectDB from './src/config/db.js';
+import { initSocket } from './src/config/socket.js';
+import assignmentRoutes from './src/routes/assignments.js';
 
 // Import worker to run in same process (alternatively run as separate process)
-import './workers/questionWorker.js';
+import './src/workers/questionWorker.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
