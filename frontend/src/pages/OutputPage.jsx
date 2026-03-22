@@ -70,7 +70,8 @@ export default function OutputPage() {
 
   const handleDownloadPDF = async () => {
     try {
-      const response = await fetch(`/api/assignments/${id}/pdf`);
+      const base = import.meta.env.VITE_API_BASE_URL || '/api';
+      const response = await fetch(`${base}/assignments/${id}/pdf`);
       if (!response.ok) throw new Error('PDF not available');
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);
